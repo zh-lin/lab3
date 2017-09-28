@@ -2,7 +2,7 @@
 
 # 2.12 Lab 3 AprilTag Navigation: use AprilTag to get current robot (X,Y,Theta) in world frame, and to navigate to target (X,Y,Theta)
 # Peter Yu Sept 2016
-
+# modified by Daniel
 import rospy
 import tf
 import numpy as np
@@ -50,15 +50,15 @@ def constant_vel_loop():
 ## apriltag msg handling function (Need to modify)
 def apriltag_callback(data):
     # use apriltag pose detection to find where is the robot
-    if len(data.detections)!=0:
+    if len(data.detections)!=0:  # check if apriltag is detected
     	detection = data.detections[0]
     	print detection.pose 
     	if detection.id == 21:   # tag id is the correct one
 		# Use the functions in helper.py to do the following 
-		# step 1. convert the pose to poselist Hint: pose=detection.pose.pose 
+		# step 1. convert the pose to poselist Hint: pose data => detection.pose.pose 
 		# step 2. do the matrix manipulation 
 		# step 3. publish the base frame w.r.t the map frame
-    		
+    		# note: tf listener and broadcaster are initalize in line 19~20
 
 ## navigation control loop (No need to modify)
 def navi_loop():
