@@ -2,7 +2,8 @@
 
 # 2.12 Lab 3 me212bot_node: ROS driver running on the pc side to read and send messages to Arduino
 # Peter Yu Sept 2016
-
+# modified by Daniel
+DEMO=0
 import rospy
 import threading
 import serial
@@ -10,50 +11,36 @@ import tf.transformations as tfm
 from geometry_msgs.msg import Pose, Quaternion
 import math
 import helper
-from me212bot.msg import WheelCmdVel
-from Adafruit_MotorHAT import Adafruit_MotorHAT
-serialComm = serial.Serial('/dev/ttyACM0', 115200, timeout = 5)
-Motorhat = Adafruit_MotorHAT(addr = 0x60)
-leftMotor = Motorhat.getMotor(1)
-rightMotor = Motorhat.getMotor(2)
+
+if DEMO==1:
+    from Adafruit_MotorHAT import Adafruit_MotorHAT
+
 
 ## main function (Need to modify)
 def main():
 
     rospy.init_node('me212bot', anonymous=True)
-    
-    odometry_thread = threading.Thread(target = read_odometry_loop)
-    odometry_thread.start()
+    if DEMO==1:
+        serialComm = serial.Serial('/dev/ttyACM0', 115200, timeout = 5)
+        Motorhat = Adafruit_MotorHAT(addr = 0x60)
+        leftMotor = Motorhat.getMotor(1)
+        rightMotor = Motorhat.getMotor(2)
+        odometry_thread = threading.Thread(target = read_odometry_loop)
+        odometry_thread.start()
     
     ## 1. Initialize a subscriber (subscribe ROS topic)
-    cmdvel_sub = rospy.Subscriber('/cmdvel', WheelCmdVel, cmdvel_callback)
+    ## cmdvel_sub = ???
     
     rospy.spin()
 
 
 ## msg handling function (Need to modify)
 def cmdvel_callback(msg):  
-
-    ## TODO unpack msg and interpret it to adafruit motor commands 
+    print "cmdvel callback"
+    ## unpack msg and interpret it to adafruit motor commands 
     ## adafruit motor initialization: see line 15~18
     ## adafruit motor cmds: leftMotor.setSpeed(), leftMotor.run()
-    if msg.desiredWV_R > 0:
-        R_dir = 1
-    elif msg.desiredWV_R < 0:
-        R_dir = 2
-    else: 
-        R_dir = 4
-    if msg.desiredWV_L > 0:
-        L_dir = 1
-    elif msg.desiredWV_L < 0:
-        L_dir = 2
-    else:
-        L_dir = 4
-    leftMotor.setSpeed(int(abs(msg.desiredWV_L)))
-    rightMotor.setSpeed(int(abs(msg.desiredWV_R)))
-    leftMotor.run(L_dir)
-    rightMotor.run(R_dir)
-    print 'cmdvel received (%f, %f)' %(msg.desiredWV_R, msg.desiredWV_L)
+    
     return
 
 

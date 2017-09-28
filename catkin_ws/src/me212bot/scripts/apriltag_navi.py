@@ -10,7 +10,7 @@ import threading
 import serial
 import tf.transformations as tfm
 
-from me212bot.msg import WheelCmdVel
+
 from apriltags_ros.msg import AprilTagDetectionArray
 from helper import transformPose, pubFrame, cross2d, lookupTransform, pose2poselist, invPoselist, diffrad
 
@@ -33,36 +33,32 @@ def main():
     
     rospy.spin()
 
-## sending constant velocity (Need to modify for Task 1)
+## sending constant velocity (Need to modify)
 def constant_vel_loop():
     velcmd_pub = rospy.Publisher('/cmdvel', WheelCmdVel, queue_size=1)
     rate = rospy.Rate(100) # 100hz
     
     while not rospy.is_shutdown() :
-        wcv = WheelCmdVel()
-        wcv.desiredWV_R = 0.1
-        wcv.desiredWV_L = 0.2
+        ##wcv = WheelCmdVel()
+        ##wcv.desiredWV_R = ???
+        ##wcv.desiredWV_L = ???
         
-        velcmd_pub.publish(wcv) 
+        ##velcmd_pub.publish(???) 
         
         rate.sleep() 
 
-## apriltag msg handling function (Need to modify for Task 2)
+## apriltag msg handling function (Need to modify)
 def apriltag_callback(data):
     # use apriltag pose detection to find where is the robot
     if len(data.detections)!=0:
     	detection = data.detections[0]
     	print detection.pose 
     	if detection.id == 21:   # tag id is the correct one
-    		print 'detection' 
-		poselist_tag_cam = pose2poselist(detection.pose.pose)
-        	poselist_tag_base = transformPose(lr, poselist_tag_cam, sourceFrame = 'camera', targetFrame = 'robot_base')
-
-        	print poselist_tag_base
-		poselist_base_tag = invPoselist(poselist_tag_base)
-        	poselist_base_map = transformPose(lr, poselist_base_tag, sourceFrame = 'apriltag', targetFrame = 'map')
-        	pubFrame(br, pose = poselist_base_map, frame_id = '/robot_base', parent_frame_id = '/map')
-
+		# Use the functions in helper.py to do the following 
+		# step 1. convert the pose to poselist Hint: pose=detection.pose.pose 
+		# step 2. do the matrix manipulation 
+		# step 3. publish the base frame w.r.t the map frame
+    		
 
 ## navigation control loop (No need to modify)
 def navi_loop():
