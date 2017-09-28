@@ -25,7 +25,7 @@ def main():
     odometry_thread = threading.Thread(target = read_odometry_loop)
     odometry_thread.start()
     
-    ## 1. Initialize a subscriber
+    ## 1. Initialize a subscriber (subscribe ROS topic)
     cmdvel_sub = rospy.Subscriber('/cmdvel', WheelCmdVel, cmdvel_callback)
     
     rospy.spin()
@@ -33,9 +33,10 @@ def main():
 
 ## msg handling function (Need to modify)
 def cmdvel_callback(msg):  
-    ## 2. Send msg.desiredWV_R and msg.desiredWV_L to Arduino.
-    ## serialComm.write(??)
-    ##TODO link to adafruit API
+
+    ## TODO unpack msg and interpret it to adafruit motor commands 
+    ## adafruit motor initialization: see line 15~18
+    ## adafruit motor cmds: leftMotor.setSpeed(), leftMotor.run()
     if msg.desiredWV_R > 0:
         R_dir = 1
     elif msg.desiredWV_R < 0:
