@@ -16,9 +16,10 @@ find_package(catkin REQUIRED COMPONENTS
 ################################################
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-# )
+add_message_files(
+  FILES
+  WheelCmdVel.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -57,3 +58,5 @@ catkin_package()
 include_directories(
   ${catkin_INCLUDE_DIRS}
 )
+
+
